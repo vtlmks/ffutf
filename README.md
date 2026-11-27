@@ -60,17 +60,37 @@ AVX2 and AVX-512 backends on isolated cores with boost disabled. The
 speedups use 4 KiB of valid input in aligned buffers and 15 interleaved
 batches across three process launches.
 
-| Operation                    | Input       | ISA     | 9950X3D | 7950X  |
-| ---------------------------- | ----------- | ------- | ------: | -----: |
-| Validate UTF-8               | ASCII       | AVX-512 |   2.43× |  2.20× |
-| Validate UTF-8               | Mixed       | AVX-512 |   1.30× |  1.78× |
-| UTF-8 → UTF-16LE             | Dense emoji | AVX2    |  13.51× | 12.17× |
-| UTF-8 → UTF-16LE             | Dense emoji | AVX-512 |  14.02× | 14.12× |
-| UTF-8 → UTF-16LE             | Mixed       | AVX-512 |   4.84× |  3.68× |
-| UTF-16LE → UTF-8             | Dense emoji | AVX2    |  13.97× | 13.46× |
-| UTF-16LE → UTF-8             | Dense emoji | AVX-512 |  36.49× | 26.61× |
-| UTF-16LE → UTF-8             | Latin       | AVX2    |   1.33× |  2.02× |
-| UTF-8 → UTF-16LE with errors | Mixed       | AVX-512 |   4.80× |  3.65× |
+| Operation                    | Input       | ISA                              | 9950X3D |  7950X |
+| ---------------------------- | ----------- | -------------------------------- | ------: | -----: |
+| Validate UTF-8               | ASCII       | [AVX2][validate-ascii-avx2]      |   1.35× |  1.95× |
+| Validate UTF-8               | ASCII       | [AVX-512][validate-ascii-avx512] |   2.43× |  2.20× |
+| Validate UTF-8               | Mixed       | [AVX2][validate-mixed-avx2]      |   1.29× |  1.16× |
+| Validate UTF-8               | Mixed       | [AVX-512][validate-mixed-avx512] |   1.30× |  1.78× |
+| UTF-8 → UTF-16LE             | Dense emoji | [AVX2][forward-emoji-avx2]       |  13.51× | 12.17× |
+| UTF-8 → UTF-16LE             | Dense emoji | [AVX-512][forward-emoji-avx512]  |  14.02× | 14.12× |
+| UTF-8 → UTF-16LE             | Mixed       | [AVX2][forward-mixed-avx2]       |   1.78× |  1.60× |
+| UTF-8 → UTF-16LE             | Mixed       | [AVX-512][forward-mixed-avx512]  |   4.84× |  3.68× |
+| UTF-16LE → UTF-8             | Dense emoji | [AVX2][reverse-emoji-avx2]       |  13.97× | 13.46× |
+| UTF-16LE → UTF-8             | Dense emoji | [AVX-512][reverse-emoji-avx512]  |  36.49× | 26.61× |
+| UTF-16LE → UTF-8             | Latin       | [AVX2][reverse-latin-avx2]       |   1.33× |  2.02× |
+| UTF-16LE → UTF-8             | Latin       | [AVX-512][reverse-latin-avx512]  |   1.19× |  1.10× |
+| UTF-8 → UTF-16LE with errors | Mixed       | [AVX2][forward-errors-avx2]      |   1.95× |  1.85× |
+| UTF-8 → UTF-16LE with errors | Mixed       | [AVX-512][forward-errors-avx512] |   4.80× |  3.65× |
+
+[validate-ascii-avx2]: https://github.com/vtlmks/ffutf/blob/27d47c56cb686fd6326510089068cba44f14958d/utf8_utf16le.h#L1027-L1035
+[validate-ascii-avx512]: https://github.com/vtlmks/ffutf/blob/27d47c56cb686fd6326510089068cba44f14958d/utf8_utf16le.h#L841-L851
+[validate-mixed-avx2]: https://github.com/vtlmks/ffutf/blob/27d47c56cb686fd6326510089068cba44f14958d/utf8_utf16le.h#L1044
+[validate-mixed-avx512]: https://github.com/vtlmks/ffutf/blob/27d47c56cb686fd6326510089068cba44f14958d/utf8_utf16le.h#L831
+[forward-emoji-avx2]: https://github.com/vtlmks/ffutf/blob/27d47c56cb686fd6326510089068cba44f14958d/utf8_utf16le.h#L1904
+[forward-emoji-avx512]: https://github.com/vtlmks/ffutf/blob/27d47c56cb686fd6326510089068cba44f14958d/utf8_utf16le.h#L1577
+[forward-mixed-avx2]: https://github.com/vtlmks/ffutf/blob/27d47c56cb686fd6326510089068cba44f14958d/utf8_utf16le.h#L1944
+[forward-mixed-avx512]: https://github.com/vtlmks/ffutf/blob/27d47c56cb686fd6326510089068cba44f14958d/utf8_utf16le.h#L1393
+[reverse-emoji-avx2]: https://github.com/vtlmks/ffutf/blob/27d47c56cb686fd6326510089068cba44f14958d/utf8_utf16le.h#L2824-L2840
+[reverse-emoji-avx512]: https://github.com/vtlmks/ffutf/blob/27d47c56cb686fd6326510089068cba44f14958d/utf8_utf16le.h#L2391-L2424
+[reverse-latin-avx2]: https://github.com/vtlmks/ffutf/blob/27d47c56cb686fd6326510089068cba44f14958d/utf8_utf16le.h#L2842-L2868
+[reverse-latin-avx512]: https://github.com/vtlmks/ffutf/blob/27d47c56cb686fd6326510089068cba44f14958d/utf8_utf16le.h#L2470
+[forward-errors-avx2]: https://github.com/vtlmks/ffutf/blob/27d47c56cb686fd6326510089068cba44f14958d/utf8_utf16le.h#L2155
+[forward-errors-avx512]: https://github.com/vtlmks/ffutf/blob/27d47c56cb686fd6326510089068cba44f14958d/utf8_utf16le.h#L1567
 
 ### 4 KiB fixtures
 
